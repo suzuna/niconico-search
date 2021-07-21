@@ -17,21 +17,28 @@ shinyUI(
         radioButtons(inputId="targets",label="検索モード",
                      choices=c("キーワード検索"="title,description,tags","タグ検索"="tagsExact"),inline=TRUE),
         dateRangeInput(inputId="startTime",label="投稿日",separator="～",start=NA_Date_,end=NA_Date_,format="yyyy/mm/dd"),
-        shinyWidgets::numericRangeInput(inputId="viewCounter",label="再生数",value=c(1000,1500),separator="～"),
-        shinyWidgets::numericRangeInput(inputId="commentCounter",label="コメ数",value=c(NA_real_,NA_real_),separator="～"),
-        shinyWidgets::numericRangeInput(inputId="mylistCounter",label="マイリス数",value=c(NA_real_,NA_real_),separator="～"),
-        shinyWidgets::numericRangeInput(inputId="likeCounter",label="いいね数",value=c(NA_real_,NA_real_),separator="～"),
-        shinyWidgets::numericRangeInput(inputId="lengthMinutes",label="再生時間（分）",value=c(NA_real_,NA_real_),separator="～"),
-        "仮",
         fluidRow(
-          column(5,numericInput("n1","st",NA_real_)),
-          column(2,"～"),
-          column(5,numericInput("n2","en",NA_real_)),
+          column(6,numericInput(inputId="viewCounter_from",label="再生：下限",value=1000,step=1,width="100%")),
+          column(6,numericInput(inputId="viewCounter_to",label="再生：上限",value=1500,step=1,width="100%"))
+        ),
+        fluidRow(
+          column(6,numericInput(inputId="commentCounter_from",label="コメ：下限",value=NA_real_,step=1,width="100%")),
+          column(6,numericInput(inputId="commentCounter_to",label="コメ：上限",value=NA_real_,step=1,width="100%"))
+        ),
+        fluidRow(
+          column(6,numericInput(inputId="mylistCounter_from",label="マイリス：下限",value=NA_real_,step=1,width="100%")),
+          column(6,numericInput(inputId="mylistCounter_to",label="マイリス：上限",value=NA_real_,step=1,width="100%"))
+        ),
+        fluidRow(
+          column(6,numericInput(inputId="likeCounter_from",label="いいね：下限",value=NA_real_,step=1,width="100%")),
+          column(6,numericInput(inputId="likeCounter_to",label="いいね：上限",value=NA_real_,step=1,width="100%"))
+        ),
+        fluidRow(
+          column(6,numericInput(inputId="lengthMinutes_from",label="再生分数：下限",value=NA_real_,width="100%")),
+          column(6,numericInput(inputId="lengthMinutes_to",label="再生分数：上限",value=NA_real_,width="100%"))
         ),
         actionButton(inputId="submit",label="検索"),
         actionButton(inputId="mcprop_desc",label="マイ/コメ降順")
-        # style="border:1px solid #eee;",
-        # style="padding: 0.5em 1em; margin: 2em 0; background: #BEDDF1;"
       ),
       # mainPanel(
       #   textOutput(outputId="last_modified"),

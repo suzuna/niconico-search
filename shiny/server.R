@@ -5,21 +5,22 @@ shinyServer(
       q <- input$q
       # targets <- if_else(input$targets=="キーワード検索","title,description,tags","tagsExact")
       targets <- input$targets
-      startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[1]))
-      startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[2]))
-      viewCounter_from <- if_na_to_null(input$viewCounter[1])
-      viewCounter_to <- if_na_to_null(input$viewCounter[2])
-      commentCounter_from <- if_na_to_null(input$commentCounter[1])
-      commentCounter_to <- if_na_to_null(input$commentCounter[2])
-      mylistCounter_from <- if_na_to_null(input$mylistCounter[1])
-      mylistCounter_to <- if_na_to_null(input$mylistCounter[2])
-      likeCounter_from <- if_na_to_null(input$likeCounter[1])
-      likeCounter_to <- if_na_to_null(input$likeCounter[2])
-      lengthSeconds_from <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes[1]))
-      lengthSeconds_to <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes[2]))
+      startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_from))
+      startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_to))
+      viewCounter_from <- if_na_to_null(input$viewCounter_from)
+      viewCounter_to <- if_na_to_null(input$viewCounter_to)
+      commentCounter_from <- if_na_to_null(input$commentCounter_from)
+      commentCounter_to <- if_na_to_null(input$commentCounter_to)
+      mylistCounter_from <- if_na_to_null(input$mylistCounter_from)
+      mylistCounter_to <- if_na_to_null(input$mylistCounter_to)
+      likeCounter_from <- if_na_to_null(input$likeCounter_from)
+      likeCounter_to <- if_na_to_null(input$likeCounter_to)
+      lengthSeconds_from <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_from))
+      lengthSeconds_to <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_to))
       # browser()
-      print(input$viewCounter[1])
-      print(input$viewCounter[2])
+      print(input$startTime)
+      print(input$viewCounter_from)
+      print(input$viewCounter_to)
       print(viewCounter_from)
       print(viewCounter_to)
       
@@ -46,6 +47,7 @@ shinyServer(
       # totalCount=0,>=100001の除外処理 ----------------------------------------------
       # TODO
       # browser()
+      
       
       # 検索する -------------------------------------------------------------------
       fetched <- query(q,targets,fields,jf,sort,context="apiguide",SLEEP_TIME)

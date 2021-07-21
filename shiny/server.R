@@ -85,7 +85,11 @@ shinyServer(
     })
 
     output$last_modified <- renderText({
-      str_glue("{as.character(Data()$last_modified,format='%Y/%m/%d %H:%M:%S')}更新の05:00更新データ")
+      based_date_chr <- as.character(as.Date(Data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
+      based_dttm_chr <- str_c(based_date_chr,"05:00",sep=" ")
+      last_modified_chr <- as.character(Data()$last_modified,format="%Y/%m/%d %H:%M:%S")
+      
+      str_glue("{based_dttm_chr}時点（生成日時：{last_modified_chr}）")
     })
     
     output$totalCount <- renderUI({

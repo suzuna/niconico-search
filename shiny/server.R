@@ -87,15 +87,6 @@ shinyServer(
     output$last_modified <- renderText({
       str_glue("{as.character(Data()$last_modified,format='%Y/%m/%d %H:%M:%S')}更新の05:00更新データ")
     })
-    # output$totalCount <- renderText({
-    #   if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
-    #     str_glue("{Data()$q}での検索結果: {Data()$totalCount}件
-    #              件数が多すぎるため取得しませんでした。（上限：{ALLOWED_MAX_TOTALCOUNT}件）{br()}
-    #              件数を絞ってください")
-    #   } else {
-    #     str_glue("{Data()$q}での検索結果: {Data()$totalCount}件")
-    #   }
-    # })
     
     output$totalCount <- renderUI({
       if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
@@ -103,7 +94,7 @@ shinyServer(
                  ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
           HTML()
       } else {
-        str_glue("{Data()$q}での検索結果: {Data()$totalCount}件")
+        str_glue('"{Data()$q}"での検索結果: {Data()$totalCount}件')
       }
     })
     

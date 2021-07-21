@@ -42,7 +42,6 @@ shinyUI(
       ),
       mainPanel(
         textOutput(outputId="last_modified"),
-        # textOutput(outputId="totalCount"),
         uiOutput(outputId="totalCount"),
         uiOutput(outputId="result")
       )

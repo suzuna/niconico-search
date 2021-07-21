@@ -45,8 +45,9 @@ shinyServer(
       totalCount <- query_at_single_offset(q,targets,fields,jf,sort,0,100,"apiguide")$meta$totalCount
 
       # totalCount=0,>=100001の除外処理 ----------------------------------------------
-      # TODO
-      # browser()
+      if (totalCount==0 | totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        return(list(q=q,last_modified=last_modified,totalCount=totalCount,df=NULL))
+      }
       
       
       # 検索する -------------------------------------------------------------------
@@ -86,9 +87,26 @@ shinyServer(
     output$last_modified <- renderText({
       str_glue("{as.character(Data()$last_modified,format='%Y/%m/%d %H:%M:%S')}更新の05:00更新データ")
     })
-    output$totalCount <- renderText({
-      str_glue("{Data()$q}での検索結果: {Data()$totalCount}件")
+    # output$totalCount <- renderText({
+    #   if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+    #     str_glue("{Data()$q}での検索結果: {Data()$totalCount}件
+    #              件数が多すぎるため取得しませんでした。（上限：{ALLOWED_MAX_TOTALCOUNT}件）{br()}
+    #              件数を絞ってください")
+    #   } else {
+    #     str_glue("{Data()$q}での検索結果: {Data()$totalCount}件")
+    #   }
+    # })
+    
+    output$totalCount <- renderUI({
+      if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        str_glue("{Data()$q}での検索結果: {Data()$totalCount}件{br()}
+                 ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
+          HTML()
+      } else {
+        str_glue("{Data()$q}での検索結果: {Data()$totalCount}件")
+      }
     })
+    
     # output$result <- DT::renderDT({
     #   Data()$df %>%
     #     DT::datatable(
@@ -111,6 +129,10 @@ shinyServer(
     #     DT::formatRound("mylist_comment_prop",digits=1,interval=3,mark=",")
     # })
     output$result <- renderUI({
+      if (Data()$totalCount==0 | Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        return(NULL)
+      }
+      
       map(1:Data()$totalCount,~{
         df <- Data()$df
         startTime_chr <- df$startTime[.x]

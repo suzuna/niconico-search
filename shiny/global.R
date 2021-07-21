@@ -16,6 +16,7 @@ options(scipen = 100)
 source("../niconico_api.R",encoding="UTF-8")
 
 SLEEP_TIME <- 0.3
+ALLOWED_MAX_TOTALCOUNT <- 100000
 
 if_na_to_null <- function(x) {
   # if (is.null(x)|is.na(x))は、xがNULLのときにエラーが出る

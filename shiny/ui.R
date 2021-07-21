@@ -40,17 +40,11 @@ shinyUI(
         actionButton(inputId="submit",label="検索"),
         actionButton(inputId="mcprop_desc",label="マイ/コメ降順")
       ),
-      # mainPanel(
-      #   textOutput(outputId="last_modified"),
-      #   textOutput(outputId="totalCount"),
-      #   DT::DTOutput(outputId="result"),
-      #   width=8
-      # )
       mainPanel(
         textOutput(outputId="last_modified"),
-        textOutput(outputId="totalCount"),
-        uiOutput(outputId="result"),
-        # br()
+        # textOutput(outputId="totalCount"),
+        uiOutput(outputId="totalCount"),
+        uiOutput(outputId="result")
       )
     )
   )

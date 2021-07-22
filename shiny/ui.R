@@ -59,8 +59,8 @@ shinyUI(
         actionButton(inputId="submit",label="検索")
       ),
       mainPanel(
-        textOutput(outputId="last_modified"),
         uiOutput(outputId="totalCount"),
+        textOutput(outputId="last_modified"),
         uiOutput(outputId="result"),
         shinyPagerUI::pageruiInput(inputId="pager_bottom",1,1)
       )

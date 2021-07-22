@@ -4,7 +4,7 @@ shinyServer(
   # データの取得部分 ----------------------------------------------------------------
     reactive_data <- eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
-      q <- input$q
+      q <- if_else(is.na(input$q),"",input$q)
       targets <- input$targets
       startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[1]))
       startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[2]))
@@ -59,6 +59,7 @@ shinyServer(
       fields <- "all"
       sort <- "-viewCounter"
       totalCount <- query_at_single_offset(q,targets,fields,jf,sort,0,100,"apiguide")$meta$totalCount
+      cat(str_glue("totalCount: {totalCount}"),"\n")
       
       
       # totalCount=0,>=100001の除外処理 ----------------------------------------------
@@ -105,25 +106,28 @@ shinyServer(
       updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
     })
 
-    
+
     # output部分 ----------------------------------------------------------------
+    output$totalCount <- renderUI({
+      bold_q <- tags$b(reactive_data()$q)
+      bold_totalCount <- tags$b(reactive_data()$totalCount)
+      
+      if (reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        str_glue("検索ワード {bold_q} での検索結果: {bold_totalCount} 件{br()}
+               ※検索できる上限の件数は{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
+          HTML()
+      } else {
+        str_glue("検索ワード {bold_q} での検索結果: {bold_totalCount} 件") %>% 
+          HTML()
+      }
+    })
+    
     output$last_modified <- renderText({
       based_date_chr <- as.character(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
-      based_dttm_chr <- str_c(based_date_chr,"05:00",sep=" ")
+      based_dttm_chr <- str_c(based_date_chr,"05:00:00",sep=" ")
       last_modified_chr <- as.character(reactive_data()$last_modified,format="%Y/%m/%d %H:%M:%S")
       
       str_glue("{based_dttm_chr}時点（生成日時：{last_modified_chr}）")
-    })
-    
-    output$totalCount <- renderUI({
-      if (reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
-        # q_for_preview <- if_
-        str_glue("{reactive_data()$q}での検索結果: {reactive_data()$totalCount}件{br()}
-               ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
-          HTML()
-      } else {
-        str_glue('"{reactive_data()$q}"での検索結果: {reactive_data()$totalCount}件')
-      }
     })
       
     output$result <- renderUI({
@@ -169,7 +173,8 @@ shinyServer(
         cv_prop_chr <- scales::percent(cv_prop,accuracy=0.1)
         mv_prop_chr <- scales::percent(mv_prop,accuracy=0.1)
         lv_prop_chr <- scales::percent(lv_prop,accuracy=0.1)
-        mc_prop_chr <- ifelse(is.infinite(mc_prop)|is.nan(mc_prop),"-",round(mc_prop,digits=1))
+        mc_prop_chr <- ifelse(is.infinite(mc_prop)|is.nan(mc_prop),"-",
+                              scales::number(round(mc_prop,digits=1),accuracy=0.1))
         
         fluidRow(
           column(

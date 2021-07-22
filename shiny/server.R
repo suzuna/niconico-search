@@ -23,10 +23,25 @@ shinyServer(
       print(viewCounter_from)
       print(viewCounter_to)
       
+      now_query <- list(
+        q=q,
+        targets=targets,
+        startTime_from=startTime_from,startTime_to=startTime_to,
+        viewCounter_from=viewCounter_from,viewCounter_to=viewCounter_to,
+        commentCounter_from=commentCounter_from,commentCounter_to=commentCounter_to,
+        mylistCounter_from=mylistCounter_from,mylistCounter_to=mylistCounter_to,
+        likeCounter_from=likeCounter_from,likeCounter_to=likeCounter_to,
+        lengthSeconds_from=lengthSeconds_from,lengthSeconds_to=lengthSeconds_to
+      )
+      if (identical(now_query,LAST_QUERY)) {
+        fetched_data <- LAST_FETCHED_DATA
+        return(list(q=q,last_modified=fetched_data$last_modified,totalCount=fetched_data$totalCount,df=fetched_data$df))
+      }
       
+      LAST_QUERY <<- now_query
       # 最終更新日時 ------------------------------------------------------------------
       last_modified <- fetch_last_modified() %>% ISO8601chr_to_POSIXct()
-
+      
       
       # jsonFilterを作る ----------------------------------------------------------------------
       cond_param <- list(
@@ -39,13 +54,13 @@ shinyServer(
       )
       cond_param <- complete_cond(cond_param)
       jf <- create_jsonFilter("and",cond_param)
-
+      
       
       # totalCountを取得（後続のエラー処理に使う） --------------------------------------------------------------------
       fields <- "all"
       sort <- "-viewCounter"
       totalCount <- query_at_single_offset(q,targets,fields,jf,sort,0,100,"apiguide")$meta$totalCount
-
+      
       
       # totalCount=0,>=100001の除外処理 ----------------------------------------------
       if (totalCount==0 | totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
@@ -56,8 +71,8 @@ shinyServer(
       # 検索する -------------------------------------------------------------------
       fetched <- query(q,targets,fields,jf,sort,context="apiguide",SLEEP_TIME)
       df <- extract_result_from_query(fetched)
-
-
+      
+      
       # 結果の整形 --------------------------------------------------------------------
       df <- df %>%
         mutate(
@@ -73,12 +88,11 @@ shinyServer(
           viewCounter,commentCounter,comment_prop,mylistCounter,mylist_prop,
           likeCounter,like_prop,mylist_comment_prop
         )
-      df <- sort_df(df,input$sort_by)
-      df <- df %>% 
-        mutate(startTime=POSIXct_to_ISO8601chr(startTime))
-      return(list(q=q,last_modified=last_modified,totalCount=totalCount,df=df))
+      fetched_data <- list(q=q,last_modified=last_modified,totalCount=totalCount,df=df)
+      LAST_FETCHED_DATA <<- fetched_data
+      return(list(q=q,last_modified=fetched_data$last_modified,totalCount=fetched_data$totalCount,df=fetched_data$df))
     })
-
+    
     output$last_modified <- renderText({
       based_date_chr <- as.character(as.Date(Data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
       based_dttm_chr <- str_c(based_date_chr,"05:00",sep=" ")
@@ -90,20 +104,26 @@ shinyServer(
     output$totalCount <- renderUI({
       if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         str_glue("{Data()$q}での検索結果: {Data()$totalCount}件{br()}
-                 ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
+               ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
           HTML()
       } else {
         str_glue('"{Data()$q}"での検索結果: {Data()$totalCount}件')
       }
     })
-
+      
     output$result <- renderUI({
       if (Data()$totalCount==0 | Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(NULL)
       }
+      df <- sort_df(Data()$df,isolate(input$sort_by))
+      df <- df %>%
+        mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S"))
       
-      map(1:Data()$totalCount,~{
-        df <- Data()$df
+      if (nrow(df)==0) {
+        return(NULL)
+      }
+      
+      map(1:nrow(df),~{
         startTime_chr <- df$startTime[.x]
         url <- df$url[.x]
         url_thumbnail <- df$thumbnailUrl[.x]
@@ -124,7 +144,7 @@ shinyServer(
         cv_prop_chr <- scales::percent(cv_prop,accuracy=0.1)
         mv_prop_chr <- scales::percent(mv_prop,accuracy=0.1)
         lv_prop_chr <- scales::percent(lv_prop,accuracy=0.1)
-        mc_prop_chr <- round(mc_prop,digits=1)
+        mc_prop_chr <- ifelse(is.infinite(mc_prop)|is.nan(mc_prop),"-",round(mc_prop,digits=1))
         
         fluidRow(
           column(

@@ -1,7 +1,7 @@
 shinyServer(
   function(input, output, session){
 
-# データの取得部分 ----------------------------------------------------------------
+  # データの取得部分 ----------------------------------------------------------------
     reactive_data <- eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
       q <- input$q
@@ -96,7 +96,20 @@ shinyServer(
     })
     
 
-# output部分 ----------------------------------------------------------------
+    # ボタンでの投稿日時の更新 -----------------------------------------------------------------
+    observeEvent(input$last_1m,{
+      date_end <- as.Date(lubridate::with_tz(Sys.time(),tzone="Asia/Tokyo"),tz="Asia/Tokyo")
+      date_start <- date_end-months(1)
+      updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
+    })
+    observeEvent(input$last_1y,{
+      date_end <- as.Date(lubridate::with_tz(Sys.time(),tzone="Asia/Tokyo"),tz="Asia/Tokyo")
+      date_start <- date_end-lubridate::years(1)
+      updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
+    })
+    
+
+    # output部分 ----------------------------------------------------------------
     output$last_modified <- renderText({
       based_date_chr <- as.character(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
       based_dttm_chr <- str_c(based_date_chr,"05:00",sep=" ")

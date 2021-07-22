@@ -4,26 +4,14 @@ body {
   margin: 0 auto;
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 }
-/*
-a {
-  color: black;
-}
-*/
 div.box {
   font-size: 14px;
-  /*
-  background: #EEE;
-  */
 }
-/*
-.box { margin-bottom: 10px; } 
-*/
-/*
-[class*="col-lg-"],[class*="col-md-"],
-[class*="col-sm-"],[class*="col-xs-"]{
-  padding: 10px !important;
+#set_date_button {
+  display: table-cell;
+  vertical-align: middle;
+  padding-bottom: 10px;
 }
-*/
 #result > div.row {
   padding: 3px !important;
   border-bottom : 1px solid #C4C4C4;
@@ -35,5 +23,4 @@ div.col-sm-8 > a {
   font-size: 16px;
   font-weight: bold;
   color: #006699;
-  
 }

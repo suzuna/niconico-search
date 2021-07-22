@@ -16,6 +16,11 @@ shinyUI(
                      choices=c("キーワード検索"="title,description,tags","タグ検索"="tagsExact"),inline=TRUE),
         dateRangeInput(inputId="startTime",label="投稿日",separator="～",start=NA_Date_,end=NA_Date_,format="yyyy/mm/dd"),
         fluidRow(
+          column(6,actionButton(inputId="last_1m",label="直近1月")),
+          column(6,actionButton(inputId="last_1y",label="直近1年")),
+          id="set_date_button"
+        ),
+        fluidRow(
           column(6,numericInput(inputId="viewCounter_from",label="再生：下限",value=1000,step=1,width="100%")),
           column(6,numericInput(inputId="viewCounter_to",label="再生：上限",value=1500,step=1,width="100%"))
         ),

@@ -71,7 +71,7 @@ shinyServer(
       
       
       # 検索する -------------------------------------------------------------------
-      fetched <- query(q,targets,fields,jf,sort,context="apiguide",SLEEP_TIME)
+      fetched <- query2(q,targets,fields,jf,sort,context="apiguide",SLEEP_TIME)
       df <- extract_result_from_query(fetched)
       
       

@@ -97,3 +97,34 @@ sort_df <- function(data,sort_by) {
   }
   return(data)
 }
+
+# shiny::withProgressあり版
+query2 <- function(q,targets,fields,jsonFilter,sort="-viewCounter",context="apiguide",sleep_time=1) {
+  limit <- 100
+  if (fields=="all") {
+    fields <- "contentId,title,description,userId,channelId,viewCounter,mylistCounter,likeCounter,lengthSeconds,thumbnailUrl,startTime,lastResBody,commentCounter,lastCommentTime,categoryTags,tags,genre"
+  }
+  fetched_first <- query_at_single_offset(q=q,targets=targets,fields=fields,jsonFilter=jsonFilter,sort=sort,offset=0,limit=limit,context=context)
+  totalCount <- fetched_first$meta$totalCount
+  max_offset_pages <- ceiling(totalCount/limit)-1
+  print(max_offset_pages)
+  cat(stringr::str_glue("{Sys.time()} fetched: 1 - {min(limit,totalCount)}"),"\n")
+  offsets <- (0:max_offset_pages)*limit
+  Sys.sleep(sleep_time)
+  
+  withProgress({
+    res <- offsets %>% 
+      purrr::map(~{
+        Sys.sleep(sleep_time)
+        incProgress(amount=1/length(0:max_offset_pages),message=str_glue("実行中です ({.x/limit+1}/{max_offset_pages+1})"))
+        data <- query_at_single_offset(q=q,targets=targets,fields=fields,jsonFilter=jsonFilter,sort=sort,offset=.x,limit=limit,context=context)
+        cat(stringr::str_glue("{Sys.time()} fetched: {.x+1} - {min(.x+limit,totalCount)}"),"\n")
+        return(data)
+      })
+  })
+  res <- list(
+    totalCount=totalCount,
+    fetched_data=res
+  )
+  return(res)
+}

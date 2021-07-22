@@ -1,11 +1,13 @@
 shinyServer(
   function(input, output, session){
-    Data=eventReactive(input$submit,{
+
+# データの取得部分 ----------------------------------------------------------------
+    reactive_data <- eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
       q <- input$q
       targets <- input$targets
-      startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_from))
-      startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_to))
+      startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[1]))
+      startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[2]))
       viewCounter_from <- if_na_to_null(input$viewCounter_from)
       viewCounter_to <- if_na_to_null(input$viewCounter_to)
       commentCounter_from <- if_na_to_null(input$commentCounter_from)
@@ -93,29 +95,31 @@ shinyServer(
       return(list(q=q,last_modified=fetched_data$last_modified,totalCount=fetched_data$totalCount,df=fetched_data$df))
     })
     
+
+# output部分 ----------------------------------------------------------------
     output$last_modified <- renderText({
-      based_date_chr <- as.character(as.Date(Data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
+      based_date_chr <- as.character(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
       based_dttm_chr <- str_c(based_date_chr,"05:00",sep=" ")
-      last_modified_chr <- as.character(Data()$last_modified,format="%Y/%m/%d %H:%M:%S")
+      last_modified_chr <- as.character(reactive_data()$last_modified,format="%Y/%m/%d %H:%M:%S")
       
       str_glue("{based_dttm_chr}時点（生成日時：{last_modified_chr}）")
     })
     
     output$totalCount <- renderUI({
-      if (Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
-        str_glue("{Data()$q}での検索結果: {Data()$totalCount}件{br()}
+      if (reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        str_glue("{reactive_data()$q}での検索結果: {reactive_data()$totalCount}件{br()}
                ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
           HTML()
       } else {
-        str_glue('"{Data()$q}"での検索結果: {Data()$totalCount}件')
+        str_glue('"{reactive_data()$q}"での検索結果: {reactive_data()$totalCount}件')
       }
     })
       
     output$result <- renderUI({
-      if (Data()$totalCount==0 | Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+      if (reactive_data()$totalCount==0 | reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(NULL)
       }
-      df <- sort_df(Data()$df,isolate(input$sort_by))
+      df <- sort_df(reactive_data()$df,isolate(input$sort_by))
       df <- df %>%
         mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S"))
       

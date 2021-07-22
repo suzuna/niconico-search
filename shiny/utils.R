@@ -79,7 +79,6 @@ query2 <- function(q,targets,fields,jsonFilter,sort="-viewCounter",context="apig
   fetched_first <- query_at_single_offset(q=q,targets=targets,fields=fields,jsonFilter=jsonFilter,sort=sort,offset=0,limit=limit,context=context)
   totalCount <- fetched_first$meta$totalCount
   max_offset_pages <- ceiling(totalCount/limit)-1
-  cat(stringr::str_glue("{Sys.time()} fetched: 1 - {min(limit,totalCount)}"),"\n")
   offsets <- (0:max_offset_pages)*limit
   Sys.sleep(sleep_time)
   

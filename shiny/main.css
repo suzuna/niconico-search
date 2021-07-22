@@ -1,6 +1,7 @@
 body {
   font-size: 14px;
-  max-width: 1080px;
+  max-width: 920px;
+  min-width: 920px;
   margin: 0 auto;
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
 }
@@ -12,15 +13,22 @@ div.box {
   vertical-align: middle;
   padding-bottom: 10px;
 }
-#result > div.row {
+#result>div.row {
   padding: 3px !important;
   border-bottom : 1px solid #C4C4C4;
 }
-div.box-body > div.row {
+div.box-body>div.row {
   padding: 3px !important;
 }
-div.col-sm-8 > a {
+a#movie_title {
   font-size: 16px;
   font-weight: bold;
   color: #006699;
+}
+div#movie-info {
+  margin-left: 5px;
+}
+#movie-stat {
+  position: absolute;
+  bottom: 5px;
 }

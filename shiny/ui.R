@@ -5,8 +5,8 @@ shinyUI(
     tags$head(includeCSS("main.css")),
     titlePanel("ニコニコ検索（仮）"),
     tags$ul(
-      tags$li("全件取得するので時間がかかる"),
-      tags$li("マイリス率やコメ率、マイリス/コメソートができる")
+      tags$li("再生数などでのフィルタに加え、マイリス率やコメント率、「マイリス数/コメント数」などでのソートができます"),
+      tags$li("ただし、それらのソートと引き換えに、検索結果を全件取得するので、表示に時間がかかります")
     ),
     hr(),
     sidebarLayout(
@@ -33,8 +33,8 @@ shinyUI(
           column(6,numericInput(inputId="mylistCounter_to",label="マイリス：上限",value=NA_real_,step=1,width="100%"))
         ),
         fluidRow(
-          column(6,numericInput(inputId="likeCounter_from",label="いいね：下限",value=NA_real_,step=1,width="100%")),
-          column(6,numericInput(inputId="likeCounter_to",label="いいね：上限",value=NA_real_,step=1,width="100%"))
+          column(6,numericInput(inputId="likeCounter_from",label="いいね！：下限",value=NA_real_,step=1,width="100%")),
+          column(6,numericInput(inputId="likeCounter_to",label="いいね！：上限",value=NA_real_,step=1,width="100%"))
         ),
         fluidRow(
           column(6,numericInput(inputId="lengthMinutes_from",label="再生分数：下限",value=NA_real_,width="100%")),

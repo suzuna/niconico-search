@@ -1,7 +1,7 @@
 shinyServer(
   function(input,output,session){
-
-  # データの取得部分 ----------------------------------------------------------------
+    
+    # データの取得部分 ----------------------------------------------------------------
     reactive_data <- eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
       q <- if_else(is.na(input$q),"",input$q)
@@ -181,17 +181,21 @@ shinyServer(
             12,
             shinydashboard::box(
               fluidRow(
-                column(4,str_glue("{rank}位")),
-                column(8,startTime_chr)
+                column(3,str_glue("{rank}位")),
+                column(9,startTime_chr)
               ),
               fluidRow(
-                column(4,tags$img(src=url_thumbnail)),
-                column(8,tags$a(href=url,title))
-              ),
-              fluidRow(
+                column(3,tags$a(href=url,tags$img(src=url_thumbnail))),
                 column(
-                  12,
-                  str_glue("再生 {vc_chr}　コメ {cc_chr} ({cv_prop_chr})　マイ {mc_chr} ({mv_prop_chr})　いいね {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr}")
+                  9,
+                  tags$a(href=url,title,id="movie_title"),
+                  tags$div(
+                    str_glue("再生 {vc_chr}　コメ {cc_chr} ({cv_prop_chr})　マイ {mc_chr} ({mv_prop_chr})"),
+                    br(),
+                    str_glue("いいね！ {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr}"),
+                    id="movie_stat"
+                  ),
+                  id="movie_info"
                 )
               ),
               width=12

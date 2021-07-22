@@ -29,4 +29,4 @@ LAST_QUERY <- list(
   likeCounter_from=NULL,likeCounter_to=NULL,
   lengthSeconds_from=NULL,lengthSeconds_to=NULL
 )
-LAST_FETCHED_DF <- NULL
+LAST_FETCHED_DATA <- NULL

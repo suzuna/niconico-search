@@ -185,10 +185,10 @@ shinyServer(
                 column(9,startTime_chr)
               ),
               fluidRow(
-                column(3,tags$a(href=url,tags$img(src=url_thumbnail))),
+                column(3,tags$a(href=url,tags$img(src=url_thumbnail),target="_blank",rel="noopener noreferrer")),
                 column(
                   9,
-                  tags$a(href=url,title,id="movie_title"),
+                  tags$a(href=url,title,target="_blank",rel="noopener noreferrer",id="movie_title"),
                   tags$div(
                     str_glue("再生 {vc_chr}　コメ {cc_chr} ({cv_prop_chr})　マイ {mc_chr} ({mv_prop_chr})"),
                     br(),

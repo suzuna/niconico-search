@@ -2,8 +2,6 @@ shinyUI(
   fluidPage(
     # tags$head(includeHTML("google-analytics.html")),
     tags$head(includeScript("returnclick.js")),
-    # tags$head(tags$style(HTML("body {font-size: 14px; max-width: 1080px; margin: 0 auto;} a {color: black;}"))),
-    # tags$head(tags$style(HTML("div.box {background: #BEDDF1;}"))),
     tags$head(includeCSS("main.css")),
     titlePanel("ニコニコ検索（仮）"),
     tags$ul(
@@ -37,8 +35,23 @@ shinyUI(
           column(6,numericInput(inputId="lengthMinutes_from",label="再生分数：下限",value=NA_real_,width="100%")),
           column(6,numericInput(inputId="lengthMinutes_to",label="再生分数：上限",value=NA_real_,width="100%"))
         ),
-        actionButton(inputId="submit",label="検索"),
-        actionButton(inputId="mcprop_desc",label="マイ/コメ降順")
+        selectInput(
+          inputId="sort_by",
+          label="ソート順",
+          choices=c(
+            "再生数が多い順"="viewCounter_desc","再生数が少ない順"="viewCounter_asc",
+            "コメ数が多い順"="commentCounter_desc","コメ数が少ない順"="commentCounter_asc",
+            "マイリス数が多い順"="mylistCounter_desc","マイリス数が少ない順"="mylistCounter_asc",
+            "いいね数が多い順"="likeCounter_desc","いいね数が少ない順"="likeCounter_asc",
+            "投稿日時が新しい順"="startTime_desc","投稿日時が古い順"="startTime_asc",
+            "再生分数が長い順"="lengthMinutes_desc","再生分数が短い順"="lengthMinutes_asc",
+            "コメ率が大きい順"="comment_prop_desc","コメ率が小さい順"="comment_prop_asc",
+            "マイリス率が大きい順"="mylist_prop_desc","マイリス率が小さい順"="mylist_prop_asc",
+            "いいね率が大きい順"="like_prop_desc","いいね率が小さい順"="like_prop_asc",
+            "マイ/コメが大きい順"="mylist_comment_prop_desc","マイ/コメが小さい順"="mylist_comment_prop_asc"
+          )
+        ),
+        actionButton(inputId="submit",label="検索")
       ),
       mainPanel(
         textOutput(outputId="last_modified"),

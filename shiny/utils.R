@@ -60,3 +60,40 @@ complete_cond <- function(filters) {
       return(d)
     })
 }
+
+sort_df <- function(data,sort_by) {
+  param <- switch(sort_by,
+    "viewCounter_desc"=list(param_sort_by="viewCounter",is_desc=TRUE,exclude_zero_col=NULL),
+    "viewCounter_asc"=list(param_sort_by="viewCounter",is_desc=FALSE,exclude_zero_col=NULL),
+    "commentCounter_desc"=list(param_sort_by="commentCounter",is_desc=TRUE,exclude_zero_col=NULL),
+    "commentCounter_asc"=list(param_sort_by="commentCounter",is_desc=FALSE,exclude_zero_col=NULL),
+    "mylistCounter_desc"=list(param_sort_by="mylistCounter",is_desc=TRUE,exclude_zero_col=NULL),
+    "mylistCounter_asc"=list(param_sort_by="mylistCounter",is_desc=FALSE,exclude_zero_col=NULL),
+    "likeCounter_desc"=list(param_sort_by="likeCounter",is_desc=TRUE,exclude_zero_col=NULL),
+    "likeCounter_asc"=list(param_sort_by="likeCounter",is_desc=FALSE,exclude_zero_col=NULL),
+    "lengthSeconds_desc"=list(param_sort_by="lengthSeconds",is_desc=TRUE,exclude_zero_col=NULL),
+    "lengthSeconds_asc"=list(param_sort_by="lengthSeconds",is_desc=FALSE,exclude_zero_col=NULL),
+    
+    "comment_prop_desc"=list(param_sort_by="comment_prop",is_desc=TRUE,exclude_zero_col="viewCounter"),
+    "comment_prop_asc"=list(param_sort_by="comment_prop",is_desc=FALSE,exclude_zero_col="viewCounter"),
+    "mylist_prop_desc"=list(param_sort_by="mylist_prop",is_desc=TRUE,exclude_zero_col="viewCounter"),
+    "mylist_prop_asc"=list(param_sort_by="mylist_prop",is_desc=FALSE,exclude_zero_col="viewCounter"),
+    "like_prop_desc"=list(param_sort_by="like_prop",is_desc=TRUE,exclude_zero_col="viewCounter"),
+    "like_prop_asc"=list(param_sort_by="like_prop",is_desc=FALSE,exclude_zero_col="viewCounter"),
+    
+    "mylist_comment_prop_desc"=list(param_sort_by="mylist_comment_prop",is_desc=TRUE,exclude_zero_col="commentCounter"),
+    "mylist_comment_prop_asc"=list(param_sort_by="mylist_comment_prop",is_desc=FALSE,exclude_zero_col="commentCounter")
+  )
+  if (!is.null(param$exclude_zero_col)) {
+    data <- data %>% 
+      filter(!!as.name(param$exclude_zero_col)>=1)
+  }
+  if (param$is_desc) {
+    data <- data %>% 
+      arrange(desc(across(param$param_sort_by)))
+  } else {
+    data <- data %>% 
+      arrange(across(param$param_sort_by))
+  }
+  return(data)
+}

@@ -3,7 +3,6 @@ shinyServer(
     Data=eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
       q <- input$q
-      # targets <- if_else(input$targets=="キーワード検索","title,description,tags","tagsExact")
       targets <- input$targets
       startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_from))
       startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime_to))
@@ -17,16 +16,18 @@ shinyServer(
       likeCounter_to <- if_na_to_null(input$likeCounter_to)
       lengthSeconds_from <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_from))
       lengthSeconds_to <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_to))
-      # browser()
+      
       print(input$startTime)
       print(input$viewCounter_from)
       print(input$viewCounter_to)
       print(viewCounter_from)
       print(viewCounter_to)
       
+      
       # 最終更新日時 ------------------------------------------------------------------
       last_modified <- fetch_last_modified() %>% ISO8601chr_to_POSIXct()
 
+      
       # jsonFilterを作る ----------------------------------------------------------------------
       cond_param <- list(
         list(type="range",field="startTime",from=startTime_from,to=startTime_to),
@@ -39,11 +40,13 @@ shinyServer(
       cond_param <- complete_cond(cond_param)
       jf <- create_jsonFilter("and",cond_param)
 
+      
       # totalCountを取得（後続のエラー処理に使う） --------------------------------------------------------------------
       fields <- "all"
       sort <- "-viewCounter"
       totalCount <- query_at_single_offset(q,targets,fields,jf,sort,0,100,"apiguide")$meta$totalCount
 
+      
       # totalCount=0,>=100001の除外処理 ----------------------------------------------
       if (totalCount==0 | totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(list(q=q,last_modified=last_modified,totalCount=totalCount,df=NULL))
@@ -54,6 +57,7 @@ shinyServer(
       fetched <- query(q,targets,fields,jf,sort,context="apiguide",SLEEP_TIME)
       df <- extract_result_from_query(fetched)
 
+
       # 結果の整形 --------------------------------------------------------------------
       df <- df %>%
         mutate(
@@ -62,25 +66,16 @@ shinyServer(
           like_prop=likeCounter/viewCounter,
           mylist_comment_prop=mylistCounter/commentCounter
         ) %>%
-        # mutate(across(c(comment_prop,mylist_prop,like_prop,mylist_comment_prop),~round(.x,digits=3))) %>%
-        mutate(
-          # thumbnail=str_glue("<img src='{thumbnailUrl}' height='50px'></img>"),
-          url=str_glue("https://www.nicovideo.jp/watch/{contentId}")
-          # title=str_glue("<a href='{url}' target='_blank' rel='noopener noreferrer'>{title}</a>")
-        ) %>%
-        mutate(startTime=as.POSIXct(startTime,format="%Y-%m-%dT%H:%M:%S+09:00") %>%
-                 as.character(format="%Y/%m/%d %H:%M")) %>%
+        mutate(url=str_glue("https://www.nicovideo.jp/watch/{contentId}")) %>%
+        mutate(startTime=ISO8601chr_to_POSIXct(startTime)) %>%
         select(
           thumbnailUrl,url,title,startTime,
           viewCounter,commentCounter,comment_prop,mylistCounter,mylist_prop,
           likeCounter,like_prop,mylist_comment_prop
         )
-      
-      # if (input$mcprop_desc) {
-      #   df <- df %>% 
-      #     arrange(desc(mylist_comment_prop))
-      # }
-      
+      df <- sort_df(df,input$sort_by)
+      df <- df %>% 
+        mutate(startTime=POSIXct_to_ISO8601chr(startTime))
       return(list(q=q,last_modified=last_modified,totalCount=totalCount,df=df))
     })
 
@@ -101,28 +96,7 @@ shinyServer(
         str_glue('"{Data()$q}"での検索結果: {Data()$totalCount}件')
       }
     })
-    
-    # output$result <- DT::renderDT({
-    #   Data()$df %>%
-    #     DT::datatable(
-    #       class="row-border",rownames=TRUE,escape=FALSE,
-    #       options=list(
-    #         pageLength=1000,
-    #         scrollX=TRUE,
-    #         ordering=TRUE,
-    #         select=FALSE,
-    #         autoWidth=TRUE,
-    #         columnDefs=list(
-    #           list(width="5rem",targets=1),
-    #           list(width="10rem",targets=2),
-    #           list(width="6rem",targets=3)
-    #         )
-    #       )
-    #     ) %>%
-    #     DT::formatCurrency(c("viewCounter","commentCounter","mylistCounter","likeCounter"),currency="",digits=0,interval=3,mark=",") %>%
-    #     DT::formatPercentage(c("comment_prop","mylist_prop","like_prop"),digits=1,interval=3,mark=",") %>%
-    #     DT::formatRound("mylist_comment_prop",digits=1,interval=3,mark=",")
-    # })
+
     output$result <- renderUI({
       if (Data()$totalCount==0 | Data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(NULL)

@@ -61,7 +61,8 @@ shinyUI(
       mainPanel(
         textOutput(outputId="last_modified"),
         uiOutput(outputId="totalCount"),
-        uiOutput(outputId="result")
+        uiOutput(outputId="result"),
+        shinyPagerUI::pageruiInput(inputId="pager_bottom",1,1)
       )
     )
   )

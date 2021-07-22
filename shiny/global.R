@@ -18,6 +18,7 @@ source("utils.R",encoding="UTF-8")
 
 SLEEP_TIME <- 0.3
 ALLOWED_MAX_TOTALCOUNT <- 100000
+ONEPAGE_NUM <- 30
 
 LAST_QUERY <- list(
   q=NULL,

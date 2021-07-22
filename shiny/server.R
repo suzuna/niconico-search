@@ -19,11 +19,8 @@ shinyServer(
       lengthSeconds_from <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_from))
       lengthSeconds_to <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_to))
       
-      print(input$startTime)
-      print(input$viewCounter_from)
-      print(input$viewCounter_to)
-      print(viewCounter_from)
-      print(viewCounter_to)
+      cat(str_glue("input_startTime[1]: {(input$startTime[1])} input_startTime[2]: {(input$startTime[2])}"),"\n")
+      cat(str_glue("input_viewCounter_from: {(input$viewCounter_from)} input_viewCounter_to: {(input$viewCounter_to)}"),"\n")
       
       now_query <- list(
         q=q,
@@ -107,8 +104,8 @@ shinyServer(
       date_start <- date_end-lubridate::years(1)
       updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
     })
-    
 
+    
     # output部分 ----------------------------------------------------------------
     output$last_modified <- renderText({
       based_date_chr <- as.character(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
@@ -120,6 +117,7 @@ shinyServer(
     
     output$totalCount <- renderUI({
       if (reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
+        # q_for_preview <- if_
         str_glue("{reactive_data()$q}での検索結果: {reactive_data()$totalCount}件{br()}
                ※上限：{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
           HTML()
@@ -132,15 +130,25 @@ shinyServer(
       if (reactive_data()$totalCount==0 | reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(NULL)
       }
+      
+      now_page <- input$pager_bottom$page_current
+      row_start <- (now_page-1)*ONEPAGE_NUM+1
+      row_end <- now_page*ONEPAGE_NUM
+
       df <- sort_df(reactive_data()$df,isolate(input$sort_by))
       df <- df %>%
-        mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S"))
+        mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S")) %>% 
+        mutate(rank=row_number())
+      df_base <- df
+      df <- df %>% 
+        slice(row_start:row_end)
       
       if (nrow(df)==0) {
         return(NULL)
       }
       
-      map(1:nrow(df),~{
+      res <- map(1:nrow(df),~{
+        rank <- df$rank[.x]
         startTime_chr <- df$startTime[.x]
         url <- df$url[.x]
         url_thumbnail <- df$thumbnailUrl[.x]
@@ -168,7 +176,7 @@ shinyServer(
             12,
             shinydashboard::box(
               fluidRow(
-                column(4,str_glue("{.x}位")),
+                column(4,str_glue("{rank}位")),
                 column(8,startTime_chr)
               ),
               fluidRow(
@@ -186,5 +194,11 @@ shinyServer(
           )
         )
       })
+      shinyPagerUI::updatePageruiInput(
+        session,inputId="pager_bottom",
+        page_current=now_page,
+        pages_total=ceiling(nrow(df_base)/ONEPAGE_NUM)
+      )
+      return(res)
     })
   })

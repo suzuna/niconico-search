@@ -1,23 +1,23 @@
 shinyServer(
-  function(input, output, session){
+  function(input,output,session){
 
   # データの取得部分 ----------------------------------------------------------------
     reactive_data <- eventReactive(input$submit,{
       # インプットの整理 ----------------------------------------------------------------
       q <- if_else(is.na(input$q),"",input$q)
       targets <- input$targets
-      startTime_from <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[1]))
-      startTime_to <- safely_convert_date_to_POSIXct(if_na_to_null(input$startTime[2]))
-      viewCounter_from <- if_na_to_null(input$viewCounter_from)
-      viewCounter_to <- if_na_to_null(input$viewCounter_to)
-      commentCounter_from <- if_na_to_null(input$commentCounter_from)
-      commentCounter_to <- if_na_to_null(input$commentCounter_to)
-      mylistCounter_from <- if_na_to_null(input$mylistCounter_from)
-      mylistCounter_to <- if_na_to_null(input$mylistCounter_to)
-      likeCounter_from <- if_na_to_null(input$likeCounter_from)
-      likeCounter_to <- if_na_to_null(input$likeCounter_to)
-      lengthSeconds_from <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_from))
-      lengthSeconds_to <- convert_seconds_to_minutes(if_na_to_null(input$lengthMinutes_to))
+      startTime_from <- convert_date_to_POSIXct(input$startTime[1])
+      startTime_to <- convert_date_to_POSIXct(input$startTime[2])
+      viewCounter_from <- input$viewCounter_from
+      viewCounter_to <- input$viewCounter_to
+      commentCounter_from <- input$commentCounter_from
+      commentCounter_to <- input$commentCounter_to
+      mylistCounter_from <- input$mylistCounter_from
+      mylistCounter_to <- input$mylistCounter_to
+      likeCounter_from <- input$likeCounter_from
+      likeCounter_to <- input$likeCounter_to
+      lengthSeconds_from <- floor(input$lengthMinutes_from*60)
+      lengthSeconds_to <- floor(input$lengthMinutes_to*60)
       
       cat(str_glue("input_startTime[1]: {(input$startTime[1])} input_startTime[2]: {(input$startTime[2])}"),"\n")
       cat(str_glue("input_viewCounter_from: {(input$viewCounter_from)} input_viewCounter_to: {(input$viewCounter_to)}"),"\n")

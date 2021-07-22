@@ -1,43 +1,15 @@
-if_na_to_null <- function(x) {
-  # if (is.null(x)|is.na(x))は、xがNULLのときにエラーが出る
-  if (is.null(x)) {
-    res <- NULL
-  }
-  else if (is.na(x)) {
-    res <- NULL
-  } else {
-    res <- x
-  }
-  return(res)
-}
-
-safely_convert_date_to_POSIXct <- function(date,tz="Asia/Tokyo") {
-  if (is.null(date)) {
-    res <- NULL
-  } else {
-    res <- date %>% 
-      force_tz(tzone=tz) %>% 
-      as.POSIXct(tz=tz) 
-  }
-  return(res)
-}
-
-#' @param x a numeric or integer value, or NULL
-convert_seconds_to_minutes <- function(x) {
-  if (is.null(x)) {
-    res <- NULL
-  } else {
-    res <- floor(x*60)
-  }
-  return(res)
+convert_date_to_POSIXct <- function(date,tz="Asia/Tokyo") {
+  date %>% 
+    force_tz(tzone=tz) %>% 
+    as.POSIXct(tz=tz)
 }
 
 #' @param filters a list of lists
 complete_cond <- function(filters) {
   filters %>% 
-    # fromとtoが両方NULLのlistは、フィルタをしていないということなので、NULLにする
+    # fromとtoが両方NAのlistはフィルタをしていないということなので、NULLにする
     map(~{
-      if (is.null(.x$from) & is.null(.x$to)) {
+      if (is.na(.x$from) & is.na(.x$to)) {
         return(NULL)
       } else {
         return(.x)
@@ -47,8 +19,8 @@ complete_cond <- function(filters) {
     discard(is.null) %>% 
     map(~{
       d <- .x %>% 
-        # fromとtoのどちらかがNULLの場合、それを削除する
-        discard(is.null) %>% 
+        # fromとtoのどちらかがNAの場合、それを削除する
+        discard(is.na) %>% 
         map_if(~lubridate::is.Date(.),~as.POSIXct(lubridate::force_tz(.,tzone="Asia/Tokyo"),tz="Asia/Tokyo")) %>%
         map_if(is.POSIXct,POSIXct_to_ISO8601chr)
       if (d$type=="range" & !is.null(d$from)) {

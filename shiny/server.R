@@ -188,21 +188,28 @@ shinyServer(
             12,
             shinydashboard::box(
               fluidRow(
-                column(3,str_glue("{rank}位")),
-                column(9,startTime_chr)
+                column(3,str_glue("{rank}位"),id="rank"),
+                column(9,startTime_chr,id="startTime")
               ),
               fluidRow(
-                column(3,tags$a(href=url,tags$img(src=url_thumbnail),target="_blank",rel="noopener noreferrer")),
+                column(3,tags$a(href=url,tags$img(src=url_thumbnail,height="100px"),target="_blank",rel="noopener noreferrer")),
                 column(
                   9,
-                  tags$a(href=url,title,target="_blank",rel="noopener noreferrer",id="movie_title"),
                   tags$div(
-                    str_glue("再生 {vc_chr}　コメ {cc_chr} ({cv_prop_chr})　マイ {mc_chr} ({mv_prop_chr})"),
-                    br(),
-                    str_glue("いいね！ {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr}"),
-                    id="movie_stat"
-                  ),
-                  id="movie_info"
+                    tags$a(href=url,title,target="_blank",rel="noopener noreferrer",id="movie_title"),
+                    tags$div(
+                      tags$div(
+                        str_glue("再生 {vc_chr}　コメ {cc_chr} ({cv_prop_chr})　マイ {mc_chr} ({mv_prop_chr})"),
+                        id="movie_stat_top"
+                      ),
+                      tags$div(
+                        str_glue("いいね！ {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr}"),
+                        id="movie_stat_bottom"
+                      ),
+                      id="movie_stat"
+                    ),
+                    id="movie_info"
+                  )
                 )
               ),
               width=12

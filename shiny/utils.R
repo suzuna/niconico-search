@@ -86,7 +86,8 @@ query2 <- function(q,targets,fields,jsonFilter,sort="-viewCounter",context="apig
     res <- offsets %>% 
       purrr::map(~{
         Sys.sleep(sleep_time)
-        incProgress(amount=1/length(0:max_offset_pages),message=str_glue("実行中です ({.x/limit+1}/{max_offset_pages+1})"))
+        # incProgress(amount=1/length(0:max_offset_pages),message=str_glue("取得中です ({.x/limit+1}/{max_offset_pages+1})"))
+        incProgress(amount=1/length(0:max_offset_pages),message=str_glue("取得中です ({.x}/{totalCount})"))
         data <- query_at_single_offset(q=q,targets=targets,fields=fields,jsonFilter=jsonFilter,sort=sort,offset=.x,limit=limit,context=context)
         cat(stringr::str_glue("{Sys.time()} fetched: {.x+1} - {min(.x+limit,totalCount)}"),"\n")
         return(data)

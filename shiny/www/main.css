@@ -1,0 +1,55 @@
+body {
+  font-size: 14px;
+  max-width: 1008px;
+  min-width: 1008px;
+  margin: 0 auto;
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  font-family: Avenir,Lato,-apple-system,BlinkMacSystemFont,Helvetica Neue,Hiragino Kaku Gothic ProN,Meiryo,メイリオ,sans-serif;
+}
+div.box {
+  font-size: 14px;
+}
+#set_date_button {
+  display: table-cell;
+  vertical-align: middle;
+  padding-bottom: 10px;
+}
+#result>div.row {
+  padding: 3px;
+  border-bottom : 1px solid #C4C4C4;
+}
+div.box-body>div.row {
+  padding: 3px;
+}
+a#movie_title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #006699;
+}
+#movie_info {
+  /* the same height as thumbnails */
+  height: 100px;
+}
+#movie_stat {
+  position: absolute;
+  bottom: 5px;
+}
+#rank, #startTime, #movie_stat {
+  font-size: 13px;
+}
+#result {
+  padding-top: 10px;
+}
+#pager_bottom {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+#main {
+  width: 720px;
+}
+#movie_stat_bottom {
+  padding-top: 3px;
+}
+#scroller {
+  top: 28px;
+}

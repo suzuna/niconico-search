@@ -1,14 +1,16 @@
 shinyUI(
   fluidPage(
     # tags$head(includeHTML("google-analytics.html")),
+    scroller::use_scroller(),
     tags$head(
-      includeCSS("main.css"),
-      includeScript("returnclick.js")
+      includeCSS("www/main.css"),
+      includeScript("www/returnclick.js")
     ),
     titlePanel("ニコニコ検索（仮）"),
     tags$ul(
       tags$li("再生数などでのフィルタに加え、マイリス率やコメント率、「マイリス数/コメント数」などでのソートができます"),
-      tags$li("ただし、それらのソートと引き換えに、検索結果を全件取得するので、表示に時間がかかります")
+      tags$li("ただし、それらのソートと引き換えに、検索結果を全件取得するので、表示に時間がかかります"),
+      id="#top"
     ),
     hr(),
     sidebarLayout(
@@ -64,7 +66,11 @@ shinyUI(
         uiOutput(outputId="totalCount"),
         textOutput(outputId="last_modified"),
         uiOutput(outputId="result"),
-        shinyPagerUI::pageruiInput(inputId="pager_bottom",1,1)
+        fluidRow(
+          column(3,a("上へスクロール",type="button",href="#top"),id="scroller"),
+          column(9,shinyPagerUI::pageruiInput(inputId="pager_bottom",1,1))
+        ),
+        id="#main"
       )
     )
   )

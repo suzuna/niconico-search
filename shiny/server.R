@@ -90,6 +90,7 @@ shinyServer(
         )
       fetched_data <- list(q=q,last_modified=last_modified,totalCount=totalCount,df=df)
       LAST_FETCHED_DATA <<- fetched_data
+      
       return(list(q=q,last_modified=fetched_data$last_modified,totalCount=fetched_data$totalCount,df=fetched_data$df))
     })
     
@@ -106,7 +107,7 @@ shinyServer(
       updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
     })
 
-
+     
     # output部分 ----------------------------------------------------------------
     output$totalCount <- renderUI({
       bold_q <- tags$b(reactive_data()$q)
@@ -129,7 +130,13 @@ shinyServer(
       
       str_glue("{based_dttm_chr}時点（生成日時：{last_modified_chr}）")
     })
-      
+    
+    # 検索ボタンが押されたとき、ページネーションをリセットする
+    # 「ボタンでの投稿日時の更新」部分に書くと動かず、ここに書くと正しくリセットされる
+    observeEvent(input$submit,{
+      shinyPagerUI::updatePageruiInput(session,inputId="pager_bottom",page_current=1,pages_total=1)
+    })
+    
     output$result <- renderUI({
       if (reactive_data()$totalCount==0 | reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         return(NULL)
@@ -138,7 +145,7 @@ shinyServer(
       now_page <- input$pager_bottom$page_current
       row_start <- (now_page-1)*ONEPAGE_NUM+1
       row_end <- now_page*ONEPAGE_NUM
-
+      
       df <- sort_df(reactive_data()$df,isolate(input$sort_by))
       df <- df %>%
         mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S")) %>% 

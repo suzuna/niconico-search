@@ -1,8 +1,10 @@
 shinyUI(
   fluidPage(
     # tags$head(includeHTML("google-analytics.html")),
-    tags$head(includeScript("returnclick.js")),
-    tags$head(includeCSS("main.css")),
+    tags$head(
+      includeCSS("main.css"),
+      includeScript("returnclick.js")
+    ),
     titlePanel("ニコニコ検索（仮）"),
     tags$ul(
       tags$li("再生数などでのフィルタに加え、マイリス率やコメント率、「マイリス数/コメント数」などでのソートができます"),

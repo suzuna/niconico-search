@@ -7,27 +7,28 @@ shinyUI(
                includeCSS("www/main.css"),
                includeScript("www/returnclick.js")
              ),
+             tags$div(id="top"),
              titlePanel("ニコニコ検索（仮）"),
              tags$ul(
                tags$li("再生数などでフィルタをかけられる上、マイリス率やコメント率、「マイリス数/コメント数」などでのソートができます"),
-               tags$li("ただし、それらのソートが可能な代わりに検索結果を全件取得するので、表示に時間がかかります（検索結果が1000件で5秒程度）"),
-               id="#top"
+               tags$li("ただし、それらのソートが可能な代わりに検索結果を全件取得するので、検索結果の表示に時間がかかります（検索結果が1000件で5秒程度）")
              ),
              hr(),
              sidebarLayout(
                sidebarPanel(
-                 textInput(inputId="q",label=NULL,value="きんいろモザイク 音MAD", placeholder="検索ワード"),
+                 textInput(inputId="q",label=NULL,value="", placeholder="検索ワード"),
                  radioButtons(inputId="targets",label="検索モード",
                               choices=c("キーワード検索"="title,description,tags","タグ検索"="tagsExact"),inline=TRUE),
-                 dateRangeInput(inputId="startTime",label="投稿日",separator="～",start=NA_Date_,end=NA_Date_,format="yyyy/mm/dd"),
+                 dateRangeInput(inputId="startTime",label="投稿日",separator="～",
+                                start=NA_Date_,end=NA_Date_,min="2005-01-01",format="yyyy/mm/dd"),
                  fluidRow(
                    column(6,actionButton(inputId="last_1m",label="直近1月")),
                    column(6,actionButton(inputId="last_1y",label="直近1年")),
                    id="set_date_button"
                  ),
                  fluidRow(
-                   column(6,numericInput(inputId="viewCounter_from",label="再生：下限",value=1000,step=1,width="100%")),
-                   column(6,numericInput(inputId="viewCounter_to",label="再生：上限",value=1500,step=1,width="100%"))
+                   column(6,numericInput(inputId="viewCounter_from",label="再生：下限",value=NA_real_,step=1,width="100%")),
+                   column(6,numericInput(inputId="viewCounter_to",label="再生：上限",value=NA_real_,step=1,width="100%"))
                  ),
                  fluidRow(
                    column(6,numericInput(inputId="commentCounter_from",label="コメ：下限",value=NA_real_,step=1,width="100%")),
@@ -47,7 +48,7 @@ shinyUI(
                  ),
                  selectInput(
                    inputId="sort_by",
-                   label="ソート順",
+                   label="表示順",
                    choices=c(
                      "再生数が多い順"="viewCounter_desc","再生数が少ない順"="viewCounter_asc",
                      "コメ数が多い順"="commentCounter_desc","コメ数が少ない順"="commentCounter_asc",

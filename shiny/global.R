@@ -16,7 +16,7 @@ source("niconico_api_shiny.R",encoding="UTF-8")
 source("utils.R",encoding="UTF-8")
 
 SLEEP_TIME <- 0.5
-ALLOWED_MAX_TOTALCOUNT <- 100000
+ALLOWED_MAX_TOTALCOUNT <- 10000
 ONEPAGE_NUM <- 50
 
 LAST_QUERY <- list(

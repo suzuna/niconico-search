@@ -115,7 +115,7 @@ shinyServer(
       
       if (reactive_data()$totalCount>=ALLOWED_MAX_TOTALCOUNT+1) {
         str_glue("検索ワード {bold_q} での検索結果: {bold_totalCount} 件{br()}
-               ※検索できる上限の件数は{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
+               ※検索できる件数の上限は{ALLOWED_MAX_TOTALCOUNT}件です。件数を絞ってください。") %>% 
           HTML()
       } else {
         str_glue("検索ワード {bold_q} での検索結果: {bold_totalCount} 件") %>% 
@@ -128,7 +128,7 @@ shinyServer(
       based_dttm_chr <- str_c(based_date_chr,"05:00:00",sep=" ")
       last_modified_chr <- as.character(reactive_data()$last_modified,format="%Y/%m/%d %H:%M:%S")
       
-      str_glue("{based_dttm_chr}時点（生成日時：{last_modified_chr}）")
+      str_glue("{based_dttm_chr}時点（生成日時: {last_modified_chr}）")
     })
     
     # 検索ボタンが押されたとき、ページネーションをリセットする

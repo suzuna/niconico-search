@@ -5,7 +5,7 @@ shinyUI(
              scroller::use_scroller(),
              tags$head(
                includeCSS("www/main.css"),
-               includeScript("www/returnclick.js")
+               includeScript("www/script.js")
              ),
              tags$div(id="top"),
              titlePanel("ニコニコ検索（仮）"),

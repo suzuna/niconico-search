@@ -43,8 +43,11 @@ sort_df <- function(data,sort_by) {
     "mylistCounter_asc"=list(param_sort_by="mylistCounter",is_desc=FALSE,exclude_zero_col=NULL),
     "likeCounter_desc"=list(param_sort_by="likeCounter",is_desc=TRUE,exclude_zero_col=NULL),
     "likeCounter_asc"=list(param_sort_by="likeCounter",is_desc=FALSE,exclude_zero_col=NULL),
-    "lengthSeconds_desc"=list(param_sort_by="lengthSeconds",is_desc=TRUE,exclude_zero_col=NULL),
-    "lengthSeconds_asc"=list(param_sort_by="lengthSeconds",is_desc=FALSE,exclude_zero_col=NULL),
+    
+    "startTime_desc"=list(param_sort_by="startTime",is_desc=TRUE,exclude_zero_col=NULL),
+    "startTime_asc"=list(param_sort_by="startTime",is_desc=FALSE,exclude_zero_col=NULL),
+    "length_desc"=list(param_sort_by="lengthSeconds",is_desc=TRUE,exclude_zero_col=NULL),
+    "length_asc"=list(param_sort_by="lengthSeconds",is_desc=FALSE,exclude_zero_col=NULL),
     
     "comment_prop_desc"=list(param_sort_by="comment_prop",is_desc=TRUE,exclude_zero_col="viewCounter"),
     "comment_prop_asc"=list(param_sort_by="comment_prop",is_desc=FALSE,exclude_zero_col="viewCounter"),

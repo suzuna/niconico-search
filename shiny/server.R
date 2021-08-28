@@ -82,9 +82,9 @@ shinyServer(
           mylist_comment_prop=mylistCounter/commentCounter
         ) %>%
         mutate(url=str_glue("https://www.nicovideo.jp/watch/{contentId}")) %>%
-        mutate(startTime=ISO8601chr_to_POSIXct(startTime)) %>%
+        mutate(startTime=ISO8601chr_to_POSIXct(startTime)) %>% 
         select(
-          thumbnailUrl,url,title,startTime,
+          thumbnailUrl,url,title,startTime,lengthSeconds,
           viewCounter,commentCounter,comment_prop,mylistCounter,mylist_prop,
           likeCounter,like_prop,mylist_comment_prop
         )

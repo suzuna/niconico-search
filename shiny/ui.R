@@ -55,7 +55,7 @@ shinyUI(
                      "マイリス数が多い順"="mylistCounter_desc","マイリス数が少ない順"="mylistCounter_asc",
                      "いいね数が多い順"="likeCounter_desc","いいね数が少ない順"="likeCounter_asc",
                      "投稿日時が新しい順"="startTime_desc","投稿日時が古い順"="startTime_asc",
-                     "再生分数が長い順"="lengthMinutes_desc","再生分数が短い順"="lengthMinutes_asc",
+                     "再生分数が長い順"="length_desc","再生分数が短い順"="length_asc",
                      "コメ率が大きい順"="comment_prop_desc","コメ率が小さい順"="comment_prop_asc",
                      "マイリス率が大きい順"="mylist_prop_desc","マイリス率が小さい順"="mylist_prop_asc",
                      "いいね率が大きい順"="like_prop_desc","いいね率が小さい順"="like_prop_asc",

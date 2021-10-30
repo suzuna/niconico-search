@@ -102,3 +102,19 @@ query2 <- function(q,targets,fields,jsonFilter,sort="-viewCounter",context="apig
   )
   return(res)
 }
+
+# 50秒->0:50, 70秒->1:10, 3610秒->1:00:10
+# 秒数は常に、分数は1時間以上の時にパディングする（8秒->0:08, 68秒->1:08, 3608秒->1:00:08）
+#' @param seconds a numeric
+#' @return a character
+format_movie_length <- function(seconds) {
+  hours <- floor(seconds%/%3600)
+  minutes <- floor(seconds%/%60)-hours*60
+  seconds <- seconds-(hours*3600+minutes*60)
+  
+  minutes <- if_else(hours>=1,str_pad(as.character(minutes),width=2,side="left",pad="0"),as.character(minutes))
+  seconds <- str_pad(as.character(seconds),width=2,side="left",pad="0")
+  
+  res <- if_else(hours>=1,str_glue("{hours}:{minutes}:{seconds}"),str_glue("{minutes}:{seconds}"))
+  return(res)
+}

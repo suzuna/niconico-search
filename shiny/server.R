@@ -183,12 +183,15 @@ shinyServer(
         mc_prop_chr <- ifelse(is.infinite(mc_prop)|is.nan(mc_prop),"-",
                               scales::number(round(mc_prop,digits=1),accuracy=0.1))
         
+        lengthseconds <- df$lengthSeconds[.x]
+        lengthseconds_chr <- format_movie_length(lengthseconds)
+        
         fluidRow(
           column(
             12,
             shinydashboard::box(
               fluidRow(
-                column(3,str_glue("{rank}位"),id="rank"),
+                column(3,str_glue("{rank}位 / {lengthseconds_chr}"),id="rank"),
                 column(9,startTime_chr,id="startTime")
               ),
               fluidRow(

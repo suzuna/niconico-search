@@ -98,12 +98,12 @@ shinyServer(
     # ボタンでの投稿日時の更新 -----------------------------------------------------------------
     observeEvent(input$last_1m,{
       date_end <- as.Date(lubridate::with_tz(Sys.time(),tzone="Asia/Tokyo"),tz="Asia/Tokyo")
-      date_start <- date_end-months(1)
+      date_start <- date_end %m+% months(-1)
       updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
     })
     observeEvent(input$last_1y,{
       date_end <- as.Date(lubridate::with_tz(Sys.time(),tzone="Asia/Tokyo"),tz="Asia/Tokyo")
-      date_start <- date_end-lubridate::years(1)
+      date_start <- date_end %m+% years(-1)
       updateDateRangeInput(session,inputId="startTime",start=date_start,end=date_end)
     })
 

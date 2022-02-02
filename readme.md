@@ -7,4 +7,4 @@
 - 投稿日時、再生数、コメント数、マイリスト数、いいね数、再生時間をフィルタ条件に指定した検索
 - 検索結果を、コメント率、マイリスト率、いいね率、マイリスト数/コメント数の大小順で表示
 
-https://suzuna.shinyapps.io/niconico_search/
+https://suzuna.shinyapps.io/niconico-search/

@@ -16,7 +16,7 @@ options(scipen = 100)
 source("niconico_api_shiny.R",encoding="UTF-8")
 source("utils.R",encoding="UTF-8")
 
-SLEEP_TIME <- 0.5
+SLEEP_TIME <- 0.3
 ALLOWED_MAX_TOTALCOUNT <- 10000
 ONEPAGE_NUM <- 50
 

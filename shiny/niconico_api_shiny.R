@@ -5,7 +5,7 @@ options(scipen=100)
 
 
 POSIXct_to_ISO8601chr <- function(datetime) {
-  as.character(datetime,format="%Y-%m-%dT%H:%M:%S+09:00")
+  format(datetime,format="%Y-%m-%dT%H:%M:%S+09:00")
 }
 
 ISO8601chr_to_POSIXct <- function(str) {

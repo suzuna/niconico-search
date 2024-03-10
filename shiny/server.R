@@ -124,9 +124,9 @@ shinyServer(
     })
     
     output$last_modified <- renderText({
-      based_date_chr <- as.character(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
+      based_date_chr <- format(as.Date(reactive_data()$last_modified,tz="Asia/Tokyo"),format="%Y/%m/%d")
       based_dttm_chr <- str_c(based_date_chr,"05:00:00",sep=" ")
-      last_modified_chr <- as.character(reactive_data()$last_modified,format="%Y/%m/%d %H:%M:%S")
+      last_modified_chr <- format(reactive_data()$last_modified,format="%Y/%m/%d %H:%M:%S")
       
       str_glue("{based_dttm_chr}時点（生成日時: {last_modified_chr}）")
     })
@@ -148,7 +148,7 @@ shinyServer(
       
       df <- sort_df(reactive_data()$df,isolate(input$sort_by))
       df <- df %>%
-        mutate(startTime=as.character(startTime,format="%Y/%m/%d %H:%M:%S")) %>% 
+        mutate(startTime=format(startTime,format="%Y/%m/%d %H:%M:%S")) %>% 
         mutate(rank=row_number())
       df_base <- df
       df <- df %>% 

@@ -6,8 +6,8 @@ shinyServer(
       # インプットの整理 ----------------------------------------------------------------
       q <- if_else(is.na(input$q),"",input$q)
       targets <- input$targets
-      startTime_from <- convert_date_to_POSIXct(input$startTime[1])
-      startTime_to <- convert_date_to_POSIXct(input$startTime[2])
+      startTime_from <- if_else(is.na(input$startTime[1]),as.POSIXct("2005-01-01 00:00:00"),convert_date_to_POSIXct(input$startTime[1]))
+      startTime_to <- if_else(is.na(input$startTime[2]),Sys.time()+lubridate::days(1),convert_date_to_POSIXct(input$startTime[2]))
       viewCounter_from <- input$viewCounter_from
       viewCounter_to <- input$viewCounter_to
       commentCounter_from <- input$commentCounter_from

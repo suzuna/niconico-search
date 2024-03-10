@@ -27,7 +27,7 @@ query_at_single_offset <- function(q,targets,fields,jsonFilter,sort="-viewCounte
   if (fields=="all") {
     fields <- "contentId,title,description,userId,channelId,viewCounter,mylistCounter,likeCounter,lengthSeconds,thumbnailUrl,startTime,lastResBody,commentCounter,lastCommentTime,categoryTags,tags,genre"
   }
-  endpoint <- "https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search"
+  endpoint <- "https://snapshot.search.nicovideo.jp/api/v2/snapshot/video/contents/search"
   resp <- httr::GET(
     url=endpoint,
     query=list(
@@ -108,7 +108,7 @@ extract_result_from_query <- function(data) {
 }
 
 fetch_last_modified <- function() {
-  endpoint <- "https://api.search.nicovideo.jp/api/v2/snapshot/version"
+  endpoint <- "https://snapshot.search.nicovideo.jp/api/v2/snapshot/version"
   httr::GET(url=endpoint) %>% 
     httr::content() %>% 
     .$last_modified

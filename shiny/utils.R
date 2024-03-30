@@ -22,7 +22,8 @@ complete_cond <- function(filters) {
         # fromとtoのどちらかがNAの場合、それを削除する
         discard(is.na) %>% 
         map_if(~lubridate::is.Date(.),~as.POSIXct(lubridate::force_tz(.,tzone="Asia/Tokyo"),tz="Asia/Tokyo")) %>%
-        map_if(is.POSIXct,POSIXct_to_ISO8601chr)
+        map_if(is.POSIXct,POSIXct_to_ISO8601chr) %>%
+        map_if(is.numeric, as.character)
       if (d$type=="range" & !is.null(d$from)) {
         d$include_lower <- TRUE
       }

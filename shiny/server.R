@@ -19,9 +19,6 @@ shinyServer(
       lengthSeconds_from <- floor(input$lengthMinutes_from*60)
       lengthSeconds_to <- floor(input$lengthMinutes_to*60)
       
-      cat(str_glue("input_startTime[1]: {(input$startTime[1])} input_startTime[2]: {(input$startTime[2])}"),"\n")
-      cat(str_glue("input_viewCounter_from: {(input$viewCounter_from)} input_viewCounter_to: {(input$viewCounter_to)}"),"\n")
-      
       now_query <- list(
         q=q,
         targets=targets,
@@ -32,6 +29,8 @@ shinyServer(
         likeCounter_from=likeCounter_from,likeCounter_to=likeCounter_to,
         lengthSeconds_from=lengthSeconds_from,lengthSeconds_to=lengthSeconds_to
       )
+      cat(jsonlite::toJSON(now_query, auto_unbox=TRUE), "\n")
+      
       if (identical(now_query,LAST_QUERY)) {
         fetched_data <- LAST_FETCHED_DATA
         return(list(q=q,last_modified=fetched_data$last_modified,totalCount=fetched_data$totalCount,df=fetched_data$df))
@@ -53,13 +52,13 @@ shinyServer(
       )
       cond_param <- complete_cond(cond_param)
       jf <- create_jsonFilter("and",cond_param)
-      
+
       
       # totalCountを取得（後続のエラー処理に使う） --------------------------------------------------------------------
       fields <- "all"
       sort <- "-viewCounter"
       totalCount <- query_at_single_offset(q,targets,fields,jf,sort,0,100,"apiguide")$meta$totalCount
-      cat(str_glue("totalCount: {totalCount}"),"\n")
+      cat(str_glue("{Sys.time()} totalCount: {totalCount}"),"\n")
       
       
       # totalCount=0,>=100001の除外処理 ----------------------------------------------

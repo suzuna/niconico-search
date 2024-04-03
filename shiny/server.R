@@ -78,14 +78,15 @@ shinyServer(
           comment_prop=commentCounter/viewCounter,
           mylist_prop=mylistCounter/viewCounter,
           like_prop=likeCounter/viewCounter,
-          mylist_comment_prop=mylistCounter/commentCounter
+          mylist_comment_prop=mylistCounter/commentCounter,
+          like_comment_prop=likeCounter/commentCounter
         ) %>%
         mutate(url=str_glue("https://www.nicovideo.jp/watch/{contentId}")) %>%
         mutate(startTime=ISO8601chr_to_POSIXct(startTime)) %>% 
         select(
           thumbnailUrl,url,title,startTime,lengthSeconds,
           viewCounter,commentCounter,comment_prop,mylistCounter,mylist_prop,
-          likeCounter,like_prop,mylist_comment_prop
+          likeCounter,like_prop,mylist_comment_prop,like_comment_prop
         )
       fetched_data <- list(q=q,last_modified=last_modified,totalCount=totalCount,df=df)
       LAST_FETCHED_DATA <<- fetched_data
@@ -171,6 +172,7 @@ shinyServer(
         mv_prop <- df$mylist_prop[.x]
         lv_prop <- df$like_prop[.x]
         mc_prop <- df$mylist_comment_prop[.x]
+        lc_prop <- df$like_comment_prop[.x]
         
         vc_chr <- scales::comma(vc)
         cc_chr <- scales::comma(cc)
@@ -181,6 +183,8 @@ shinyServer(
         lv_prop_chr <- scales::percent(lv_prop,accuracy=0.1)
         mc_prop_chr <- ifelse(is.infinite(mc_prop)|is.nan(mc_prop),"-",
                               scales::number(round(mc_prop,digits=1),accuracy=0.1))
+        lc_prop_chr <- ifelse(is.infinite(lc_prop)|is.nan(lc_prop),"-",
+                              scales::number(round(lc_prop,digits=1),accuracy=0.1))
         
         lengthseconds <- df$lengthSeconds[.x]
         lengthseconds_chr <- format_movie_length(lengthseconds)
@@ -205,7 +209,7 @@ shinyServer(
                         id="movie_stat_top"
                       ),
                       tags$div(
-                        str_glue("いいね！ {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr}"),
+                        str_glue("いいね！ {lc_chr} ({lv_prop_chr})　マイ/コメ {mc_prop_chr} いいね/コメ {lc_prop_chr}"),
                         id="movie_stat_bottom"
                       ),
                       id="movie_stat"

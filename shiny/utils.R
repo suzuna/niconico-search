@@ -58,7 +58,9 @@ sort_df <- function(data,sort_by) {
     "like_prop_asc"=list(param_sort_by="like_prop",is_desc=FALSE,exclude_zero_col="viewCounter"),
     
     "mylist_comment_prop_desc"=list(param_sort_by="mylist_comment_prop",is_desc=TRUE,exclude_zero_col="commentCounter"),
-    "mylist_comment_prop_asc"=list(param_sort_by="mylist_comment_prop",is_desc=FALSE,exclude_zero_col="commentCounter")
+    "mylist_comment_prop_asc"=list(param_sort_by="mylist_comment_prop",is_desc=FALSE,exclude_zero_col="commentCounter"),
+    "like_comment_prop_desc"=list(param_sort_by="like_comment_prop",is_desc=TRUE,exclude_zero_col="commentCounter"),
+    "like_comment_prop_asc"=list(param_sort_by="like_comment_prop",is_desc=FALSE,exclude_zero_col="commentCounter")
   )
   if (!is.null(param$exclude_zero_col)) {
     data <- data %>% 

@@ -60,7 +60,8 @@ shinyUI(
                      "コメ率が大きい順"="comment_prop_desc","コメ率が小さい順"="comment_prop_asc",
                      "マイリス率が大きい順"="mylist_prop_desc","マイリス率が小さい順"="mylist_prop_asc",
                      "いいね率が大きい順"="like_prop_desc","いいね率が小さい順"="like_prop_asc",
-                     "マイ/コメが大きい順"="mylist_comment_prop_desc","マイ/コメが小さい順"="mylist_comment_prop_asc"
+                     "マイ/コメが大きい順"="mylist_comment_prop_desc","マイ/コメが小さい順"="mylist_comment_prop_asc",
+                     "いいね/コメが大きい順"="like_comment_prop_desc","いいね/コメが小さい順"="like_comment_prop_asc"
                    )
                  ),
                  actionButton(inputId="submit",label="検索")

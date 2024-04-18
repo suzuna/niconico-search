@@ -194,7 +194,7 @@ shinyServer(
             12,
             shinydashboard::box(
               fluidRow(
-                column(3,str_glue("{rank}位 / {lengthseconds_chr}"),id="rank"),
+                column(3,str_glue("#{rank} / {lengthseconds_chr}"),id="rank"),
                 column(9,startTime_chr,id="startTime")
               ),
               fluidRow(
